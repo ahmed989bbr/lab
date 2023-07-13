@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>إضافة بيانات المنتجات</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <link rel="stylesheet" type="text/css" href="css.css">
+
+</head>
+<body>
+  <h1>إضافة بيانات المنتجات</h1>
+
+  <form id="product-form">
+    <div>
+      <label for="product-name">اسم المنتج:</label>
+      <input type="text" id="product-name" name="product-name" required>
+    </div>
+    <div>
+      <label for="product-image">صورة المنتج:</label>
+      <input type="file" id="product-image" name="product-image" required>
+    </div>
+    <div>
+      <label for="product-price">السعر:</label>
+      <input type="number" id="product-price" name="product-price" required>
+    </div>
+    <div>
+      <label for="product-quantity">الكمية:</label>
+      <input type="number" id="product-quantity" name="product-quantity" required>
+    </div>
+    <button type="submit">إضافة المنتج</button>
+  </form>
+
+  <h2>حذف منتج بالاسم</h2>
+
+  <form id="delete-form">
+    <div>
+      <label for="delete-product-name">اسم المنتج:</label>
+      <input type="text" id="delete-product-name" name="delete-product-name" required>
+    </div>
+    <button type="submit">حذف المنتج</button>
+  </form>
+
+  <script src="script.js"></script>
+  <script>
+    document.getElementById("product-form").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      // استخراج القيم من حقول النموذج
+      const productName = document.getElementById("product-name").value;
+      const productImage = document.getElementById("product-image").value;
+      const productPrice = document.getElementById("product-price").value;
+      const productQuantity = document.getElementById("product-quantity").value;
+
+      // إنشاء كائن المنتج
+      const newProduct = {
+        name: productName,
+        image: productImage,
+        price: productPrice,
+        quantity: productQuantity
+      };
+
+      // الحصول على المنتجات المخزنة
+      let products = localStorage.getItem("products");
+      if (products) {
+        products = JSON.parse(products);
+      } else {
+        products = [];
+      }
+
+      // إضافة المنتج الجديد إلى المنتجات
+      products.push(newProduct);
+
+      // تخزين المنتجات المحدثة في localStorage
+      localStorage.setItem("products", JSON.stringify(products));
+
+      // إعادة تحميل الصفحة لعرض البطاقات المحدثة
+      window.location.reload();
+    });
+
+    document.getElementById("delete-form").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      // استخراج قيمة اسم المنتج المطلوب حذفه
+      const deleteProductName = document.getElementById("delete-product-name").value;
+
+      // الحصول على المنتجات المخزنة
+      let products = localStorage.getItem("products");
+      if (products) {
+        products = JSON.parse(products);
+      } else {
+        products = [];
+      }
+
+      // حذف المنتج بناءً على اسمه
+      products = products.filter(product => product.name !== deleteProductName);
+
+      // تخزين المنتجات المحدثة في localStorage
+      localStorage.setItem("products", JSON.stringify(products));
+
+      // إعادة تحميل الصفحة لعرض البطاقات المحدثة
+      window.location.reload();
+    });
+  </script>
+</body>
+</html>

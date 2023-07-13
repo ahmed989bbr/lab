@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>موقع مايكرتاتش</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>مايكرتاتش</h1>
+  </header>
+
+  <div id="cards-container"></div>
+
+  <div id="contact-form">
+    <h2>تواصل معنا</h2>
+    <!-- إضافة نموذج الاتصال هنا -->
+  </div>
+
+  <footer>
+    <div class="social-media-icons">
+      <!-- أيقونات وسائل التواصل الاجتماعي هنا -->
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    let products = localStorage.getItem("products");
+    if (products) {
+      products = JSON.parse(products);
+    } else {
+      products = [];
+    }
+
+    const cardsContainer = document.getElementById("cards-container");
+
+    function createCard(product) {
+      const card = document.createElement("div");
+      card.classList.add("card");
+      card.dataset.id = product.id; // تعيين الـid كقيمة لسمة الـdataset
+
+      const image = document.createElement("img");
+      image.src = product.image;
+      card.appendChild(image);
+
+      const productName = document.createElement("h3");
+      productName.textContent = product.name;
+      card.appendChild(productName);
+
+      const price = document.createElement("p");
+      price.textContent = "السعر: " + product.price + " جنيه";
+      card.appendChild(price);
+
+      const inquiryButton = document.createElement("button");
+      inquiryButton.textContent = "استعلام";
+      inquiryButton.classList.add("inquiry-button");
+      inquiryButton.addEventListener("click", () => {
+        const whatsappNumber = "2001119894122";
+        const message = encodeURIComponent(`أود الاستفسار عن المنتج: ${product.name}`);
+        const whatsappLink = `https://wa.me/${whatsappNumber}?text=${message}`;
+        window.open(whatsappLink);
+      });
+      card.appendChild(inquiryButton);
+
+      const deleteButton = document.createElement("button");
+      deleteButton.textContent = "حذف";
+      deleteButton.classList.add("delete-button");
+      deleteButton.addEventListener("click", () => {
+        deleteProduct(product.id);
+      });
+      card.appendChild(deleteButton);
+
+      cardsContainer.appendChild(card);
+    }
+
+    function renderCards() {
+      cardsContainer.innerHTML = "";
+
+      products.forEach(product => {
+        createCard(product);
+      });
+    }
+
+    function deleteProduct(productId) {
+      products = products.filter(product => product.id !== productId);
+      localStorage.setItem("products", JSON.stringify(products));
+      renderCards();
+    }
+
+    renderCards();
+  </script>
+</body>
+</html>
